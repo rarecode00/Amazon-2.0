@@ -15,7 +15,7 @@ router.post('/createuser' , async(req , res) =>{
         // If user already Exists....
         let user = await User.findOne({email})
         if(user){
-            return res.status(400).send({success: false , error: "This email is already Exists"})
+            return res.status(400).json({success: false , message: "This email is already Exists"})
         }
 
         let salt = await bcrypt.genSalt(10);
@@ -25,19 +25,51 @@ router.post('/createuser' , async(req , res) =>{
             email: email,
             password: secPass
         })
-        console.log(user);
         const data = {
             user: user.id
         }
         const authToken = jwt.sign(data,JWT_SECRET);
-        res.send({success: true , authToken,  message: "User Created Successfully"})
+       return  res.json({success: true , authToken,  message: "User Created Successfully"})
 
     }catch(error){
         console.log(error);
-        res.status(500).send({success: false , message:'Internal Server Error'});
+        return res.status(500).json({success: false , message:'Internal Server Error'});
     }
 })
 
 // -------------------------------------------End OF Router 1-------------------------------------------------
+
+// Router 2: To login the user with credentials.
+
+router.post('/login' , async (req , res) =>{
+    const {email , password} = req.body;
+
+    try{
+        let user = await User.findOne({email});
+        if(!user){
+           return res.json({success: false , message: "No user exists with this email.." })
+        }
+
+        const validPassword = await bcrypt.compare(password , user.password);
+
+        if(!validPassword){
+            return res.json({success: false , message: "Invalid Password."});
+        }
+
+        const payload = {
+            user: {
+                id : user.id
+            }
+        }
+
+        const authToken = jwt.sign(payload , JWT_SECRET);
+
+        return res.json({success: true , authToken});
+
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({success: false , message: 'Internal Server Error'});
+    }
+})
 
 module.exports = router
