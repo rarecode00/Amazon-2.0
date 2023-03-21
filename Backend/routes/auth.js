@@ -5,6 +5,7 @@ const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = "thisissecret"
+const fetchuser = require('../middleware/fetchuser')
 
 // Routes 1 : To create the User..
 
@@ -70,6 +71,17 @@ router.post('/login' , async (req , res) =>{
         console.log(error)
         return res.status(500).json({success: false , message: 'Internal Server Error'});
     }
+})
+
+// -----------------------------------------End of Router 2 ----------------------------------------------
+
+router.post('/getuser' , fetchuser , async (req , res) =>{
+       try{
+         const user = await User.findById(req.user.id).select('-password');
+         return res.send(user);
+       }catch{
+         return res.status(500).json({success: false , message: "Internal Server Error"})
+       }
 })
 
 module.exports = router
