@@ -7,6 +7,10 @@ const router = express.Router();
 router.post("/add-product", async (req, res) => {
   try {
     const { name, category, rating, brand, color, price, url } = req.body;
+    const findProduct = await Product.find({name});
+    if(findProduct.length > 0){
+       return res.status(400).json({success: false , message: "Product already exists with this Name"});
+    }
     const newProduct = new Product({
       name,
       category,
@@ -16,9 +20,9 @@ router.post("/add-product", async (req, res) => {
       price,
       url,
     });
-
+    
     const saveProduct = await newProduct.save();
-    return res.json({ success: true, message: "product added successfully" });
+    return res.json({ success: true, message: "Product added successfully" });
   } catch (error) {
     console.log(error);
     return res
@@ -66,6 +70,20 @@ router.put("/update-product/:id", async (req, res) => {
     return res
       .status(500)
       .json({ success: false, message: "Internal Server Error" });
+  }
+});
+
+// --------------------------------END OF ROUTER 2---------------------------------------------
+
+// Router 3: To get all the products
+
+router.get("/get-products", async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json({ success: true, products: products });
+  } catch (error) {
+     console.log(error);
+     res.status(500).json({success: false , message: "Internal Server Error"})
   }
 });
 
