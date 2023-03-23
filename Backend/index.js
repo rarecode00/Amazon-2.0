@@ -9,6 +9,7 @@ connectToMongo();
 app.use(express.json())
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/product', require('./routes/product'));
+app.use('/api/cart', require('./routes/cart'));
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);
