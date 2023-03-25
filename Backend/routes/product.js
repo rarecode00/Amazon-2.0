@@ -1,7 +1,7 @@
 const express = require("express");
 const Product = require("../models/Product");
 const router = express.Router();
-
+const mongoose = require('mongoose')
 // Router 1: To Create the Product---------------------------------------------------------
 
 router.post("/add-product", async (req, res) => {
@@ -77,14 +77,35 @@ router.put("/update-product/:id", async (req, res) => {
 
 // Router 3: To get all the products
 
-router.get("/get-products", async (req, res) => {
+router.get("/fetch-products", async (req, res) => {
   try {
     const products = await Product.find();
-    res.json({ success: true, products: products });
+    return res.json({ success: true, products: products });
   } catch (error) {
      console.log(error);
-     res.status(500).json({success: false , message: "Internal Server Error"})
+     return res.status(500).json({success: false , message: "Internal Server Error"})
   }
 });
+
+// Router 4: To get the Particular Product with Product ID
+
+router.get("/get-product/:id", async (req, res) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id.toString().padStart(24, '0'))) {
+      return res.status(400).json({ success: false, message: "Invalid ObjectId" });
+    }
+    const id = new mongoose.Types.ObjectId(req.params.id.toString())
+    const findProduct = await Product.findById(id);
+    if (!findProduct) {
+      console.log(findProduct);
+      return res.status(404).json({ success: false, message: "No product with this id exists." });
+    }
+    return res.json({ success: true, findProduct });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error });
+  }
+});
+
 
 module.exports = router;
