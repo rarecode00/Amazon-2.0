@@ -87,25 +87,6 @@ router.get("/fetch-products", async (req, res) => {
   }
 });
 
-// Router 4: To get the Particular Product with Product ID
-
-router.get("/get-product/:id", async (req, res) => {
-  try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id.toString().padStart(24, '0'))) {
-      return res.status(400).json({ success: false, message: "Invalid ObjectId" });
-    }
-    const id = new mongoose.Types.ObjectId(req.params.id.toString())
-    const findProduct = await Product.findById(id);
-    if (!findProduct) {
-      console.log(findProduct);
-      return res.status(404).json({ success: false, message: "No product with this id exists." });
-    }
-    return res.json({ success: true, findProduct });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: error });
-  }
-});
 
 
 module.exports = router;
