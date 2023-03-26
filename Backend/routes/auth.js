@@ -104,10 +104,10 @@ router.post("/login", body('email').isEmail() ,  async (req, res) => {
 // -----------------------------------------End of Router 2 ----------------------------------------------
 
 // Router 3: Get the user details..
-router.post("/getuser", fetchuser, async (req, res) => {
+router.get("/getuser", fetchuser, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password");
-    return res.send(user);
+    const user = await User.findById(req.user).select("-password");
+    return res.json({succes: true , user})
   } catch {
     return res
       .status(500)
