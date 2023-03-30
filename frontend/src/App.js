@@ -24,6 +24,7 @@ function App() {
     <div>
       {console.log(data.products)}
       successfully fetched
+      <img src = {'https://firebasestorage.googleapis.com/v0/b/ecommerce-3def5.appspot.com/o/Category-Mobile%2FRedmi-A1.jpg?alt=media&token=fe7f21b2-e3e4-4cbd-996f-72e6b8c58bde'}/>
     </div>
   );
 }

@@ -5,7 +5,7 @@ export const API_REQUEST_SUCCESS = 'API_REQUEST_SUCCESS';
 export const API_REQUEST_FAILURE = 'API_REQUEST_FAILURE';
 
 export const fetchData = (url, method, data) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch({ type: API_REQUEST_START });
     axios({
       url,
