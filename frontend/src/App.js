@@ -1,12 +1,13 @@
 import React from 'react'
 import {createBrowserRouter , RouterProvider} from 'react-router-dom'
 import AddProduct from './components/AddProduct'
-import Main from './components/Main'
+import Home from './components/Home'
+import Navbar from './components/Navbar'
 
 const Routers = createBrowserRouter([
     {
       path: '/',
-      element: <Main/>,
+      element: <Home/>,
 
     },{
       path: '/add-product',
@@ -17,6 +18,7 @@ const Routers = createBrowserRouter([
 const App = () => {
   return (
     <>
+     <Navbar/>
      <RouterProvider router={Routers} />
     </>
   )
